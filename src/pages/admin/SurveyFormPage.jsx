@@ -5,9 +5,14 @@ import Input from '../../components/Input';
 import TextArea from '../../components/TextArea';
 import QuestionForm from '../../features/survey/components/QuestionForm';
 import RatingForm from '../../features/survey/components/RatingForm';
+import Spinner from '../../components/Spinner';
+
+const initialSurvey = { title: "", description: "", startDate: "", endDate: "", image: "", questions: [{ title: "", description: "", ratings: [{ name: "", score: 0 }] }] };
+const initialQuestion = { title: "", description: "", ratings: [{ name: "", score: 0 }] };
+const initialRating = { name: "", score: 0 }
 
 export default function SurveyFormPage() {
-    const [input, setInput] = useState({ title: "", description: "", startDate: "", endDate: "", image: "", questions: [] }); // survey object
+    const [input, setInput] = useState({ title: "", description: "", startDate: "", endDate: "", image: "", questions: [{ title: "", description: "", ratings: [{ name: "", score: 0 }] }] }); // survey object
 
     const handleSubmitForm = (e) => {
         e.preventDefault();
@@ -16,6 +21,44 @@ export default function SurveyFormPage() {
     const handleChangeInput = e => {
         setInput({ ...input, [e.target.name]: e.target.value })
     };
+
+    const handleChangeInputQuestion = (e, id) => {
+        let questionArr = [...input.questions];
+        questionArr[id] = { ...questionArr[id], [e.target.name]: e.target.value };
+        setInput({ ...input, questions: questionArr })
+    };
+
+    const handleChangeInputRating = (e, qid, rid) => {
+        let ratingArr = [...input.questions[qid].ratings];
+        ratingArr[rid] = { ...ratingArr[rid], [e.target.name]: e.target.value };
+        let questionArr = [...input.questions];
+        questionArr[qid] = { ...questionArr[qid], ratings: ratingArr };
+        setInput({ ...input, questions: questionArr })
+    };
+
+    const handleAddQuestion = () => {
+        const clonedInput = { ...input };
+        clonedInput.questions.push({ title: "", description: "", ratings: [{ name: "", score: 0 }] });
+        setInput(clonedInput);
+    }
+
+    const handleAddRating = (qid) => {
+        const clonedInput = { ...input };
+        clonedInput.questions[qid].ratings.push({ name: "", score: 0 });
+        setInput(clonedInput);
+    }
+
+    const handleDeleteQuestion = (qid) => {
+        const clonedInput = { ...input };
+        clonedInput.questions.splice(qid, 1);
+        setInput(clonedInput);
+    }
+
+    const handleDeleteRating = (qid, rid) => {
+        const clonedInput = { ...input };
+        clonedInput.questions[qid].ratings.splice(rid, 1);
+        setInput(clonedInput);
+    }
 
     return (
         <div className='min-h-screen flex flex-col gap-4'>
@@ -35,12 +78,18 @@ export default function SurveyFormPage() {
                         <Input value={input.endDate} onChange={handleChangeInput} type="date" name="endDate"></Input>
                     </div>
                 </div>
-                <QuestionForm />
-                <QuestionForm />
-                <QuestionForm />
-                <Button bg="blue" text="white">+ Add Question</Button>
+                {input?.questions?.map((el, id) => <QuestionForm
+                    key={id}
+                    qid={id}
+                    questionObj={el}
+                    handleChangeInputQuestion={handleChangeInputQuestion}
+                    handleChangeInputRating={handleChangeInputRating}
+                    handleAddRating={handleAddRating}
+                    handleDeleteQuestion={handleDeleteQuestion}
+                    handleDeleteRating={handleDeleteRating} />)}
+                <Button bg="blue" text="white" onClick={handleAddQuestion}>+ Add Question</Button>
                 <br></br>
-                <Button width="full" bg="green" text="white">Submit</Button>
+                <Button width="full" bg="green" text="white">Submit Survey</Button>
             </form>
         </div>
     )
