@@ -10,6 +10,11 @@ const employeeMenuList = [
     },
     {
         id: 2,
+        word: "Coming Soon",
+        to: "/comingSoon"
+    },
+    {
+        id: 3,
         word: "History",
         to: "/history"
     }

@@ -12,9 +12,14 @@ export default function Header() {
         <header className="navbar bg-gradient-to-r from-amber-400 to-orange-400 flex justify-between text-white py-2 px-4 shadow-2xl">
             <div>
                 <div className="justify-self-start btn btn-ghost">
-                    <Link to="/">
-                        <Icon />
-                    </Link>
+                    {isAdminMode ?
+                        <Link to="/admin/create">
+                            <Icon />
+                        </Link>
+                        :
+                        <Link to="/">
+                            <Icon />
+                        </Link>}
                 </div>
                 <div className="place-self-end">
                     <ToggleAdmin />

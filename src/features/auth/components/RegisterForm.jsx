@@ -32,7 +32,7 @@ export default function RegisterForm() {
 
             await register(input);
 
-            toast.success("register success");
+            toast.success("Register Successfully");
         } catch (err) {
             if (err.response.data.message === "EMAIL_MOBILE_IN_USE") {
                 setError({ emailOrMobile: "already in use" })

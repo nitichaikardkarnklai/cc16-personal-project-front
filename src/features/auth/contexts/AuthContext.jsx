@@ -38,7 +38,7 @@ export default function AuthContextProvider({ children }) {
         } else {
             setAuthUser(res.data.user);
             storeToken(res.data.token);
-            toast.success("login successfully");
+            toast.success("Login Successfully");
         }
     }
 

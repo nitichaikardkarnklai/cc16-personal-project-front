@@ -7,7 +7,7 @@ export default function PreviousSurveyPage() {
     const { surveys } = useSurvey();
 
     return (
-        <div className='min-h-screen'>
+        <div className='min-h-screen flex flex-col gap-4'>
             {surveys.map((el) => <SurveyCard key={el.id} surveyObj={el} btnWord="In-progress" />)}
         </div>
     )

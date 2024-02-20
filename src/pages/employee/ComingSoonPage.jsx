@@ -5,7 +5,7 @@ import useSurvey from '../../hooks/use-survey';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-export default function StartSurveyPage() {
+export default function ComingSoonPage() {
     const { surveys, setAccessSurveyMode, setSurvey } = useSurvey();
     const navigate = useNavigate();
 
@@ -16,7 +16,7 @@ export default function StartSurveyPage() {
 
     return (
         <div className='min-h-screen flex flex-col gap-4'>
-            {surveys.map((el) => <SurveyCard key={el.id} surveyObj={el} btnWord={"get start"} />)}
+            {surveys.sort((a, b) => new Date(a.startDate) - new Date(b.startDate)).map((el) => <SurveyCard key={el.id} surveyObj={el} btnWord={"coming soon"} />)}
         </div>
     )
 }

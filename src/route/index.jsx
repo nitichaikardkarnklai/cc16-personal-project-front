@@ -6,6 +6,8 @@ import ProtectedAdminRoute from "../features/auth/components/ProtectedAdminRoute
 import Container from "../layouts/Container";
 import StartSurveyPage from "../pages/employee/StartSurveyPage"
 import HistoryPage from "../pages/employee/HistoryPage"
+import ComingSoonPage from "../pages/employee/ComingSoonPage"
+import DoSurveyFormPage from "../pages/employee/DoSurveyFormPage"
 import CreateSurveyPage from "../pages/admin/CreateSurveyPage"
 import FinishedSurveyPage from "../pages/admin/FinishedSurveyPage"
 import OngoingSurveyPage from "../pages/admin/OngoingSurveyPage"
@@ -32,9 +34,18 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <StartSurveyPage />
-            }, {
+            },
+            {
+                path: "/comingSoon",
+                element: <ComingSoonPage />
+            },
+            {
                 path: "/history",
                 element: <HistoryPage />
+            },
+            {
+                path: "/DoSurveyForm",
+                element: <DoSurveyFormPage />
             },
             {
                 path: "/admin",

@@ -1,33 +1,74 @@
 import React from 'react'
 import Button from '../../../components/Button'
 import formatDate from '../../../utils/format-date';
+import { useNavigate } from 'react-router-dom';
+import useSurvey from '../../../hooks/use-survey';
 
-export default function SurveyCard({ surveyObj, btnWord }) {
+export default function SurveyCard({ surveyObj, btnWord, onDelete }) {
     const { id, title, description, startDate, endDate, image } = surveyObj;
+    const navigate = useNavigate();
+    const { setSurvey, setAccessSurveyMode } = useSurvey();
 
     const startDateFormat = formatDate(startDate);
     const endDateFormat = formatDate(endDate);
 
+    const handleViewSurvey = (e, surveyObj) => {
+        setAccessSurveyMode(c => "viewOnly");
+        setSurvey(c => surveyObj);
+        navigate("/admin/surveyForm");
+    }
+
+    const handleEditSurvey = (e, surveyObj) => {
+        setAccessSurveyMode(c => "edit");
+        setSurvey(c => surveyObj);
+        navigate("/admin/surveyForm");
+    }
+
+    const handleViewHistory = (e, surveyObj) => {
+        setAccessSurveyMode(c => "viewHistoryOnly");
+        setSurvey(c => surveyObj);
+        navigate("/DoSurveyForm");
+    }
+
+    const handleGetStart = (e, surveyObj) => {
+        setAccessSurveyMode(c => "doSurvey");
+        setSurvey(c => surveyObj);
+        navigate("/DoSurveyForm");
+    }
+
     let renderBtn = <></>;
-    switch (btnWord.toLowerCase()) {
+    switch (btnWord?.toLowerCase()) {
         case "edit":
-            renderBtn = <Button bg="gray" text="black" >{btnWord}</Button>;
+            renderBtn = <Button bg="gray" text="black" onClick={(e) => handleEditSurvey(e, surveyObj)}>Edit</Button>;
             break;
         case "view":
-            renderBtn = <Button bg="blue" text="white" >{btnWord}</Button>;
+            renderBtn = <Button onClick={(e) => handleViewSurvey(e, surveyObj)} bg="blue" text="white" >View</Button>;
+            break;
+        case "view your choice":
+            renderBtn = <Button onClick={(e) => handleViewHistory(e, surveyObj)} bg="blue" text="white" >View Your Choice</Button>;
             break;
         case "in-progress":
-            renderBtn = <div className={"bg-gray-300 rounded-md py-2 px-4"} >In-progress: </div>;
+            renderBtn = (<div className='flex gap-4'>
+                <Button onClick={(e) => handleViewSurvey(e, surveyObj)} bg="blue" text="white" >View</Button>
+                <div className={"bg-gray-300 rounded-md py-2 px-4 flex items-center"}>In-progress: </div>
+            </div>);
             break;
         case "get start":
-            renderBtn = <Button bg="green" text="white" >{btnWord}</Button>;
+            renderBtn = <Button onClick={(e) => handleGetStart(e, surveyObj)} bg="green" text="white" >Get Start</Button>;
+            break;
+        case "coming soon":
+            renderBtn = <div className={"bg-gray-300 rounded-md py-2 px-4 flex items-center"}>{Math.ceil((new Date(startDate) - new Date()) / (1000 * 60 * 60 * 24)) == 1 ? "One Day Left" : Math.ceil((new Date(startDate) - new Date()) / (1000 * 60 * 60 * 24)) + " Days Left"}</div>;
             break;
         default:
-            renderBtn = <></>;
+            renderBtn = <div className={"bg-gray-300 rounded-md py-2 px-4 flex items-center"}>{btnWord}</div>;
     }
+
     return (
-        <div className='flex flex-col gap-2 w-full bg-amber-200 rounded-lg min-h-48 py-4 px-4'>
-            <div className='font-bold'>{title}</div>
+        <div className='flex flex-col gap-2 w-full bg-amber-200 rounded-lg py-4 px-4'>
+            <div className='flex justify-between'>
+                <div className='font-bold'>{title}</div>
+                {onDelete ? <button onClick={(e) => onDelete(id)}>&#x2715;</button> : ""}
+            </div>
             <div>{description}</div>
             <div className='flex justify-between items-center'>
                 <div className='flex gap-16'>
@@ -42,7 +83,7 @@ export default function SurveyCard({ surveyObj, btnWord }) {
                 </div>
                 {renderBtn}
             </div>
-            <div className='w-full flex items-center justify-center rounded-md bg-slate-400 min-h-16'>Image</div>
+            {/* <div className='w-full flex items-center justify-center rounded-md bg-slate-400 min-h-16'>Image</div> */}
         </div>
     )
 }
