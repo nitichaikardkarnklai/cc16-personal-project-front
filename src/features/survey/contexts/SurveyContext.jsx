@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import * as surveyApi from "../../../api/survey";
+import * as userSurveyApi from "../../../api/userSurvey";
 import { toast } from "react-toastify";
 import { useLocation } from 'react-router-dom';
 import useAuth from "../../../hooks/use-auth";
@@ -17,6 +18,7 @@ export default function SurveyContextProvider({ children }) {
     const { authUser } = useAuth();
 
     useEffect(() => {
+        setLoading(true);
         if (location.pathname === "/admin/create" || location.pathname === "/comingSoon") {
             // console.log("createPath", location.pathname);
             surveyApi
@@ -26,7 +28,7 @@ export default function SurveyContextProvider({ children }) {
                 })
                 .catch(err => {
                     toast.error(err.response?.data.message);
-                })
+                }).finally(() => setLoading(false))
         } else if (location.pathname === "/admin/ongoing") {
             // console.log("ongoingPath", location.pathname);
             surveyApi
@@ -36,17 +38,35 @@ export default function SurveyContextProvider({ children }) {
                 })
                 .catch(err => {
                     toast.error(err.response?.data.message);
-                })
+                }).finally(() => setLoading(false))
         } else if (location.pathname === "/admin/finished") {
             // console.log("finishedPath", location.pathname);
             surveyApi
                 .getFinishedSurvey()
                 .then(res => {
-                    setSurveys(res.data.finishedSurvey)
+                    const dataFinishedSurvey = res.data.finishedSurvey;
+
+                    userSurveyApi
+                        .getAvgData()
+                        .then(res => {
+                            // console.log(res.data.avgData);
+                            // const avgDataTemp = 
+                            // for (let i = 0; i < surveys.questions.length; i++) {
+                            //     surveys.questions[i].avg
+
+                            // }
+
+                            setSurveys(dataFinishedSurvey);
+                        })
+                        .catch(err => {
+                            toast.error(err.response?.data.message);
+                        })
+
+                    // setSurveys(res.data.finishedSurvey)
                 })
                 .catch(err => {
                     toast.error(err.response?.data.message);
-                })
+                }).finally(() => { setLoading(false) })
         } else if (location.pathname === "/") {
             surveyApi
                 .getNotDoSurvey(authUser.id)
@@ -56,7 +76,7 @@ export default function SurveyContextProvider({ children }) {
                 })
                 .catch(err => {
                     toast.error(err.response?.data.message);
-                })
+                }).finally(() => setLoading(false))
         } else if (location.pathname === "/history") {
             surveyApi
                 .getDoneSurvey(authUser.id)
@@ -66,7 +86,9 @@ export default function SurveyContextProvider({ children }) {
                 })
                 .catch(err => {
                     toast.error(err.response?.data.message);
-                })
+                }).finally(() => setLoading(false))
+        } else {
+            setLoading(false);
         }
     }, [location, onFetchSurvey])
 
@@ -79,7 +101,8 @@ export default function SurveyContextProvider({ children }) {
                 setSurvey,
                 accessSurveyMode,
                 setAccessSurveyMode,
-                loading
+                loading,
+                setLoading
             }}>
             {children}
         </SurveyContext.Provider>

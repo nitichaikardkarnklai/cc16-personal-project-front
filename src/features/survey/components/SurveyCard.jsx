@@ -3,10 +3,13 @@ import Button from '../../../components/Button'
 import formatDate from '../../../utils/format-date';
 import { useNavigate } from 'react-router-dom';
 import useSurvey from '../../../hooks/use-survey';
+import { storeAccessPageMode } from '../../../utils/local-storage';
+import { useLocation } from 'react-router-dom';
 
 export default function SurveyCard({ surveyObj, btnWord, onDelete }) {
     const { id, title, description, startDate, endDate, image } = surveyObj;
     const navigate = useNavigate();
+    const location = useLocation();
     const { setSurvey, setAccessSurveyMode } = useSurvey();
 
     const startDateFormat = formatDate(startDate);
@@ -26,12 +29,14 @@ export default function SurveyCard({ surveyObj, btnWord, onDelete }) {
 
     const handleViewHistory = (e, surveyObj) => {
         setAccessSurveyMode(c => "viewHistoryOnly");
+        storeAccessPageMode("viewHistoryOnly");
         setSurvey(c => surveyObj);
         navigate("/DoSurveyForm");
     }
 
     const handleGetStart = (e, surveyObj) => {
         setAccessSurveyMode(c => "doSurvey");
+        storeAccessPageMode("doSurvey");
         setSurvey(c => surveyObj);
         navigate("/DoSurveyForm");
     }
@@ -83,6 +88,18 @@ export default function SurveyCard({ surveyObj, btnWord, onDelete }) {
                 </div>
                 {renderBtn}
             </div>
+            {location.pathname === "/admin/finished" ?
+                <>
+                    <div>
+                        test
+                    </div>
+                    <div>
+                        test
+                    </div>
+                </>
+                :
+                ""
+            }
             {/* <div className='w-full flex items-center justify-center rounded-md bg-slate-400 min-h-16'>Image</div> */}
         </div>
     )
