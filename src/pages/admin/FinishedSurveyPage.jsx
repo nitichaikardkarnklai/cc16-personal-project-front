@@ -30,7 +30,7 @@ export default function FinishedSurveyPage() {
 
     return (
         <div className='min-h-screen flex flex-col gap-4'>
-            {surveys.map((el) => <SurveyCard key={el.id} surveyObj={el} btnWord="View" />)}
+            {surveys.map((el) => <SurveyCard key={el.id} surveyObj={el} btnWord="View Details" />)}
         </div>
     )
 }

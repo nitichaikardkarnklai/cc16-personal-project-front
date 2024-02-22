@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import useSurvey from '../../../hooks/use-survey';
 import { storeAccessPageMode } from '../../../utils/local-storage';
 import { useLocation } from 'react-router-dom';
+import AvgScore from './AvgScore';
+import * as myMath from "../../../utils/myMath"
 
 export default function SurveyCard({ surveyObj, btnWord, onDelete }) {
     const { id, title, description, startDate, endDate, image } = surveyObj;
@@ -46,8 +48,11 @@ export default function SurveyCard({ surveyObj, btnWord, onDelete }) {
         case "edit":
             renderBtn = <Button bg="gray" text="black" onClick={(e) => handleEditSurvey(e, surveyObj)}>Edit</Button>;
             break;
-        case "view":
-            renderBtn = <Button onClick={(e) => handleViewSurvey(e, surveyObj)} bg="blue" text="white" >View</Button>;
+        case "view details":
+            renderBtn = (<div className='flex gap-4'>
+                <Button onClick={(e) => handleViewSurvey(e, surveyObj)} bg="blue" text="white" >View Details</Button>
+                <div className={"bg-gray-300 rounded-md py-2 px-4 flex items-center"}>Finished: {Math.round(surveyObj.countDoSurvey / surveyObj.countTotalUser * 100)}%</div>
+            </div>);
             break;
         case "view your choice":
             renderBtn = <Button onClick={(e) => handleViewHistory(e, surveyObj)} bg="blue" text="white" >View Your Choice</Button>;
@@ -55,7 +60,7 @@ export default function SurveyCard({ surveyObj, btnWord, onDelete }) {
         case "in-progress":
             renderBtn = (<div className='flex gap-4'>
                 <Button onClick={(e) => handleViewSurvey(e, surveyObj)} bg="blue" text="white" >View</Button>
-                <div className={"bg-gray-300 rounded-md py-2 px-4 flex items-center"}>In-progress: </div>
+                <div className={"bg-gray-300 rounded-md py-2 px-4 flex items-center"}>In-progress: {Math.round(surveyObj.countDoSurvey / surveyObj.countTotalUser * 100)}%</div>
             </div>);
             break;
         case "get start":
@@ -91,11 +96,9 @@ export default function SurveyCard({ surveyObj, btnWord, onDelete }) {
             {location.pathname === "/admin/finished" ?
                 <>
                     <div>
-                        test
+                        Average Score (%): <span className='font-bold'>{myMath.avgSurveyScorePercentage(surveyObj?.questions)}%</span>
                     </div>
-                    <div>
-                        test
-                    </div>
+                    {surveyObj?.questions.map((el, id) => el.avg ? <AvgScore key={id} questionObj={el} /> : "")}
                 </>
                 :
                 ""

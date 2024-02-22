@@ -31,8 +31,10 @@ export default function SurveyContextProvider({ children }) {
                 }).finally(() => setLoading(false))
         } else if (location.pathname === "/admin/ongoing") {
             // console.log("ongoingPath", location.pathname);
-            surveyApi
-                .getOngoingSurvey()
+            // surveyApi
+            //     .getOngoingSurvey()
+            userSurveyApi
+                .getOngoingSurveyWithCountData()
                 .then(res => {
                     setSurveys(res.data.ongoingSurvey)
                 })
@@ -41,28 +43,13 @@ export default function SurveyContextProvider({ children }) {
                 }).finally(() => setLoading(false))
         } else if (location.pathname === "/admin/finished") {
             // console.log("finishedPath", location.pathname);
-            surveyApi
-                .getFinishedSurvey()
+            // surveyApi
+            //     .getFinishedSurvey()
+            userSurveyApi
+                .getFinishedSurveyWithAvgData()
                 .then(res => {
-                    const dataFinishedSurvey = res.data.finishedSurvey;
-
-                    userSurveyApi
-                        .getAvgData()
-                        .then(res => {
-                            // console.log(res.data.avgData);
-                            // const avgDataTemp = 
-                            // for (let i = 0; i < surveys.questions.length; i++) {
-                            //     surveys.questions[i].avg
-
-                            // }
-
-                            setSurveys(dataFinishedSurvey);
-                        })
-                        .catch(err => {
-                            toast.error(err.response?.data.message);
-                        })
-
-                    // setSurveys(res.data.finishedSurvey)
+                    // console.log(res.data.finishedSurvey);
+                    setSurveys(res.data.finishedSurvey);
                 })
                 .catch(err => {
                     toast.error(err.response?.data.message);
