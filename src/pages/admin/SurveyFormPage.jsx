@@ -164,7 +164,7 @@ export default function SurveyFormPage() {
                             </div>
                             <div>
                                 <label htmlFor="endDate">End Date: </label>
-                                <Input value={input.endDate} onChange={handleChangeInput} type="date" name="endDate"></Input>
+                                <Input value={input.endDate.slice(0, 10)} onChange={handleChangeInput} type="date" name="endDate"></Input>
                             </div>
                         </div>
                         {/* image component */}
