@@ -60,7 +60,7 @@ export default function SurveyCard({ surveyObj, btnWord, onDelete }) {
         case "in-progress":
             renderBtn = (<div className='flex gap-4'>
                 <Button onClick={(e) => handleViewSurvey(e, surveyObj)} bg="blue" text="white" >View</Button>
-                <div className={"bg-gray-300 rounded-md py-2 px-4 flex items-center"}>In-progress: {Math.round(surveyObj.countDoSurvey / surveyObj.countTotalUser * 100)}%</div>
+                <div className={"bg-gray-300 rounded-md py-2 px-4 flex items-center"}>In-progress: {Math.round(surveyObj.countDoSurvey / surveyObj.countTotalUser * 100) || 0}%</div>
             </div>);
             break;
         case "get start":

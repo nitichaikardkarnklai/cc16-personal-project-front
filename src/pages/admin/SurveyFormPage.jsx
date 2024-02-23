@@ -30,12 +30,23 @@ export default function SurveyFormPage() {
                 // console.log(JSON.stringify(input, null, 4));
                 const { id: surveyId, ...surveyObjTemp } = input;
                 const surveyObj = { ...deleteAllIdKeyFromSurvey(surveyObjTemp) };
-                // console.log(surveyObj);
+                // const endDateTemp = new Date(surveyObj.endDate);
+                // endDateTemp.setHours(23, 59, 59, 999);
+
+                // surveyObj.endDate = endDateTemp;
+                // console.log(surveyObj.endDate);
                 await editSurvey(surveyId, surveyObj);
 
                 toast.success("Edit Survey Successfully");
                 navigate("/admin/create");
             } else {
+                // const inputTemp = { ...input };
+                // const endDateTemp = new Date(inputTemp.endDate);
+                // endDateTemp.setHours(23, 59, 59, 999);
+
+                // inputTemp.endDate = endDateTemp;
+                // console.log(inputTemp.endDate);
+                // await createSurvey(inputTemp);
                 await createSurvey(input);
                 // console.log(JSON.stringify(input, null, 4));
 
@@ -153,7 +164,7 @@ export default function SurveyFormPage() {
                             </div>
                             <div>
                                 <label htmlFor="endDate">End Date: </label>
-                                <Input value={input.endDate.slice(0, 10)} onChange={handleChangeInput} type="date" name="endDate"></Input>
+                                <Input value={input.endDate} onChange={handleChangeInput} type="date" name="endDate"></Input>
                             </div>
                         </div>
                         {/* image component */}
