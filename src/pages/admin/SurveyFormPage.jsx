@@ -9,6 +9,7 @@ import { createSurvey, editSurvey } from '../../api/survey';
 import useSurvey from '../../hooks/use-survey';
 import formatDate from '../../utils/format-date';
 import deleteAllIdKeyFromSurvey from '../../utils/delete-all-id-key-from-survey';
+import { validateCreateSurvey, validateEditSurvey } from '../../features/survey/validations/validate-survey';
 
 const initialSurvey = { title: "", description: "", startDate: "", endDate: "", image: null, questions: [{ title: "", description: "", ratings: [{ name: "", score: 0 }] }] };
 const initialQuestion = { title: "", description: "", ratings: [{ name: "", score: 0 }] };
@@ -29,25 +30,16 @@ export default function SurveyFormPage() {
             if (accessSurveyMode === "edit") {
                 // console.log(JSON.stringify(input, null, 4));
                 const { id: surveyId, ...surveyObjTemp } = input;
-                const surveyObj = { ...deleteAllIdKeyFromSurvey(surveyObjTemp) };
-                // const endDateTemp = new Date(surveyObj.endDate);
-                // endDateTemp.setHours(23, 59, 59, 999);
+                let surveyObj = { ...deleteAllIdKeyFromSurvey(surveyObjTemp) };
+                surveyObj = validateEditSurvey(surveyObj);
 
-                // surveyObj.endDate = endDateTemp;
-                // console.log(surveyObj.endDate);
                 await editSurvey(surveyId, surveyObj);
 
                 toast.success("Edit Survey Successfully");
                 navigate("/admin/create");
             } else {
-                // const inputTemp = { ...input };
-                // const endDateTemp = new Date(inputTemp.endDate);
-                // endDateTemp.setHours(23, 59, 59, 999);
-
-                // inputTemp.endDate = endDateTemp;
-                // console.log(inputTemp.endDate);
-                // await createSurvey(inputTemp);
-                await createSurvey(input);
+                let inputObj = validateCreateSurvey(input);
+                await createSurvey(inputObj);
                 // console.log(JSON.stringify(input, null, 4));
 
                 toast.success("Create Survey Successfully");
@@ -55,8 +47,13 @@ export default function SurveyFormPage() {
             }
 
         } catch (err) {
-            console.log(err);
-            toast.error(err.response?.data.message);
+            // console.log(err);
+            // console.log(JSON.stringify(err, null, 4));
+
+            toast.error(err?.details[0]?.message);
+            if (err.response) {
+                toast.error(err.response.data.message);
+            }
         }
     }
 
